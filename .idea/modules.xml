@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/mp3-library.iml" filepath="$PROJECT_DIR$/mp3-library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mp3-library2.iml" filepath="$PROJECT_DIR$/.idea/modules/mp3-library2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mp3-library2_main.iml" filepath="$PROJECT_DIR$/.idea/modules/mp3-library2_main.iml" group="mp3-library2" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mp3-library2_test.iml" filepath="$PROJECT_DIR$/.idea/modules/mp3-library2_test.iml" group="mp3-library2" />
     </modules>
   </component>
 </project>
