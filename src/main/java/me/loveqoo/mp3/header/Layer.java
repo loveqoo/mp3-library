@@ -12,7 +12,7 @@ import static me.loveqoo.mp3.Bytes.BIT_2;
 public class Layer {
 
 	public enum Type {
-		LAYER_1, LAYER_2, LAYER_3, LAYER_RESERVED;
+		LAYER_1, LAYER_2, LAYER_3, LAYER_RESERVED
 	}
 
 	private static final Map<Integer, Layer.Type> LAYER_MAP;
