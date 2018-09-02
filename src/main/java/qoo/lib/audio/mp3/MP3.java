@@ -66,7 +66,7 @@ public class MP3 {
         versionMap.put(3, VERSION.VERSION_1);
         VERSION_MAP = Collections.unmodifiableMap(versionMap);
 
-        Map<Integer, MP3.LAYER> layerMap = new HashMap<Integer, MP3.LAYER>(4);
+        Map<Integer, MP3.LAYER> layerMap = new HashMap<>(4);
         layerMap.put(0x00, LAYER.LAYER_RESERVED);
         layerMap.put(0x01, LAYER.LAYER_3);
         layerMap.put(0x02, LAYER.LAYER_2);

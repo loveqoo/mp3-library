@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.Optional;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class MP3Util {
@@ -36,7 +37,8 @@ public class MP3Util {
 		}
 	};
 
-	public static Function<FileChannel, Optional<byte[]>> GET_HEADER_RAW = (ch) -> {
+	public static BiFunction<FileChannel, Long, Optional<byte[]>> GET_HEADER_RAW = (ch, pos) -> {
+		SET_CHANNEL_POSITION.accept(ch, pos);
 		ByteBuffer buf = ByteBuffer.allocateDirect(4);
 		byte[] data = new byte[4];
 		READ_CHANNEL.accept(ch, buf);
@@ -63,6 +65,20 @@ public class MP3Util {
 			try {
 				originPos = GET_CHANNEL_POSITION.apply(ch);
 				return f.apply(ch);
+			} finally {
+				if (originPos != -1L) {
+					SET_CHANNEL_POSITION.accept(ch, originPos);
+				}
+			}
+		};
+	}
+
+	public static <T, S> BiFunction<FileChannel, S, Optional<T>> HOLD_POSITION(BiFunction<FileChannel, S, Optional<T>> f) {
+		return (ch, s) -> {
+			long originPos = -1L;
+			try {
+				originPos = GET_CHANNEL_POSITION.apply(ch);
+				return f.apply(ch, s);
 			} finally {
 				if (originPos != -1L) {
 					SET_CHANNEL_POSITION.accept(ch, originPos);
