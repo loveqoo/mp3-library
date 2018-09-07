@@ -1,16 +1,13 @@
 package me.loveqoo.mp3;
 
-import me.loveqoo.mp3.header.BitRate;
-import me.loveqoo.mp3.header.Layer;
-import me.loveqoo.mp3.header.SamplingRate;
-import me.loveqoo.mp3.header.Version;
+import me.loveqoo.mp3.header.*;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
-import static me.loveqoo.mp3.MP3Util.*;
+import static me.loveqoo.mp3.WithFile.*;
 
 public class MP3Test {
 
@@ -71,4 +68,93 @@ public class MP3Test {
 		assert (samplingRate.isPresent());
 		assert (samplingRate.get() == SamplingRate.Type.SAMPLING_RATE_16000);
 	}
+
+	@Test
+	public void findChannelMode() {
+		Optional<ChannelMode.Type> channelMode = WithFile.work(filePath, (ch) -> {
+			Optional<Long> headerPos = HOLD_POSITION(GET_HEADER_POSITION).apply(ch);
+			Optional<byte[]> rawHeader = HOLD_POSITION(GET_HEADER_RAW).apply(ch, headerPos.get());
+			return ChannelMode.FIND_CHANNEL_MODE.apply(rawHeader.get());
+		});
+		assert (channelMode.isPresent());
+		assert (channelMode.get() == ChannelMode.Type.SINGLE_CHANNEL);
+	}
+
+	@Test
+	public void findModeExtension() {
+		Optional<ModeExtension.Type> modeExtension = WithFile.work(filePath, (ch) -> {
+			Optional<Long> headerPos = HOLD_POSITION(GET_HEADER_POSITION).apply(ch);
+			Optional<byte[]> rawHeader = HOLD_POSITION(GET_HEADER_RAW).apply(ch, headerPos.get());
+			return ModeExtension.FIND_MODE_EXTENSION.apply(rawHeader.get());
+		});
+		assert (modeExtension.isPresent());
+		assert (modeExtension.get() == ModeExtension.Type.MS_OFF_INTENSITY_OFF);
+	}
+
+	@Test
+	public void findEmphasis() {
+		Optional<Emphasis.Type> emphasis = WithFile.work(filePath, (ch) -> {
+			Optional<Long> headerPos = HOLD_POSITION(GET_HEADER_POSITION).apply(ch);
+			Optional<byte[]> rawHeader = HOLD_POSITION(GET_HEADER_RAW).apply(ch, headerPos.get());
+			return Emphasis.FIND_EMPHASIS.apply(rawHeader.get());
+		});
+		assert (emphasis.isPresent());
+		assert (emphasis.get() == Emphasis.Type.EMPHASIS_NONE);
+	}
+
+	@Test
+	public void findProtectionBit() {
+		Optional<Boolean> protectionBit = WithFile.work(filePath, (ch) -> {
+			Optional<Long> headerPos = HOLD_POSITION(GET_HEADER_POSITION).apply(ch);
+			Optional<byte[]> rawHeader = HOLD_POSITION(GET_HEADER_RAW).apply(ch, headerPos.get());
+			return Bits.HAS_PROTECTION_BIT.apply(rawHeader.get());
+		});
+		assert (protectionBit.isPresent());
+		assert (protectionBit.get());
+	}
+
+	@Test
+	public void findPaddingBit() {
+		Optional<Boolean> paddingBit = WithFile.work(filePath, (ch) -> {
+			Optional<Long> headerPos = HOLD_POSITION(GET_HEADER_POSITION).apply(ch);
+			Optional<byte[]> rawHeader = HOLD_POSITION(GET_HEADER_RAW).apply(ch, headerPos.get());
+			return Bits.HAS_PADDING_BIT.apply(rawHeader.get());
+		});
+		assert (paddingBit.isPresent());
+		assert (!paddingBit.get());
+	}
+
+	@Test
+	public void findPrivateBit() {
+		Optional<Boolean> privateBit = WithFile.work(filePath, (ch) -> {
+			Optional<Long> headerPos = HOLD_POSITION(GET_HEADER_POSITION).apply(ch);
+			Optional<byte[]> rawHeader = HOLD_POSITION(GET_HEADER_RAW).apply(ch, headerPos.get());
+			return Bits.HAS_PRIVATE_BIT.apply(rawHeader.get());
+		});
+		assert (privateBit.isPresent());
+		assert (privateBit.get());
+	}
+
+	@Test
+	public void findCopyRightBit() {
+		Optional<Boolean> copyRight = WithFile.work(filePath, (ch) -> {
+			Optional<Long> headerPos = HOLD_POSITION(GET_HEADER_POSITION).apply(ch);
+			Optional<byte[]> rawHeader = HOLD_POSITION(GET_HEADER_RAW).apply(ch, headerPos.get());
+			return Bits.HAS_COPY_RIGHT_BIT.apply(rawHeader.get());
+		});
+		assert (copyRight.isPresent());
+		assert (!copyRight.get());
+	}
+
+	@Test
+	public void findOriginalBit() {
+		Optional<Boolean> originalBit = WithFile.work(filePath, (ch) -> {
+			Optional<Long> headerPos = HOLD_POSITION(GET_HEADER_POSITION).apply(ch);
+			Optional<byte[]> rawHeader = HOLD_POSITION(GET_HEADER_RAW).apply(ch, headerPos.get());
+			return Bits.HAS_ORIGINAL_BIT.apply(rawHeader.get());
+		});
+		assert (originalBit.isPresent());
+		assert (!originalBit.get());
+	}
+
 }

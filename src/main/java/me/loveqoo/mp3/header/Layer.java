@@ -15,6 +15,8 @@ public class Layer {
 		LAYER_1, LAYER_2, LAYER_3, LAYER_RESERVED
 	}
 
+	public static final int MASK_LAYER = BIT_2 | BIT_1;
+
 	private static final Map<Integer, Layer.Type> LAYER_MAP;
 
 	static {
@@ -28,7 +30,7 @@ public class Layer {
 
 	public static Function<byte[], Optional<Type>> FIND_LAYER = (header) -> {
 		assert (header.length == 4);
-		int index = ((header[1] & (BIT_2 | BIT_1)) >> 1);
+		int index = ((header[1] & MASK_LAYER) >>> 1);
 		return LAYER_MAP.containsKey(index) ? Optional.of(LAYER_MAP.get(index)) : Optional.empty();
 	};
 }

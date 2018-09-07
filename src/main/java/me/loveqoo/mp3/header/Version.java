@@ -18,6 +18,8 @@ public class Version {
 		VERSION_1, VERSION_2, VERSION_2_5, VERSION_RESERVED
 	}
 
+	public static int VERSION_MASK = BIT_4 | BIT_3;
+
 	private static Map<Integer, Version.Type> VERSION_MAP;
 
 	static {
@@ -31,7 +33,7 @@ public class Version {
 
 	public static Function<byte[], Optional<Version.Type>> FIND_VERSION = (header) -> {
 		assert(header.length == 4);
-		int index = ((header[1] & (BIT_4 | BIT_3)) >> 3);
+		int index = ((header[1] & VERSION_MASK) >>> 3);
 		return VERSION_MAP.containsKey(index) ? Optional.of(VERSION_MAP.get(index)) : Optional.empty();
 	};
 }

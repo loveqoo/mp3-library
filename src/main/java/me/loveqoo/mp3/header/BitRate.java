@@ -18,6 +18,8 @@ public class BitRate {
 		BITRATE_448
 	}
 
+	public static int MASK_BITRATE = BIT_7 | BIT_6 | BIT_5 | BIT_4;
+
 	private static final Map<Integer, BitRate.Type> BITRATE_MAP;
 
 	static {
@@ -182,11 +184,9 @@ public class BitRate {
 	public static Function<byte[], Optional<BitRate.Type>> FIND_BITRATE = (header) -> {
 		assert (header.length == 4);
 
-		int MASK_BITRATE = BIT_7 | BIT_6 | BIT_5 | BIT_4;
 		int BITRATE = header[2] & MASK_BITRATE;
 
-		int MASK_LAYER = BIT_2 | BIT_1;
-		int LAYER = (header[1] & MASK_LAYER) >>> 1;
+		int LAYER = (header[1] & Layer.MASK_LAYER) >>> 1;
 
 		int VERSION = (header[1] & (BIT_4 | BIT_3)) >>> 1;
 
